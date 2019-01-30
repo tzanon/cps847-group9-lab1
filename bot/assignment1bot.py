@@ -9,10 +9,13 @@ import os
 import time
 import re
 from slackclient import SlackClient
+import requests
 
 import json #used for debug printing
 
-OAUTH_TOKEN = 'xoxb-536679921542-538790744855-82h7ufkOe65tPGvdoPrFik4e'
+OAUTH_TOKEN = 'INSERT TOKEN HERE' #DO NOT COMMIT TOKEN
+WEATHER_API_URL = 'http://api.openweathermap.org/data/2.5/'
+WEATHER_API_KEY = 'INSERT KEY HERE' #DO NOT COMMIT API KEY
 
 # instantiate Slack client
 slack_client = SlackClient(OAUTH_TOKEN)
@@ -22,6 +25,10 @@ starterbot_id = None
 # constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 MENTION_REGEX = "^<@(|[WU].+)>(.*)"
+WEATHER_REGEX = r"\s*((what|how)\s+)?(is\s+)?(the\s+)?weather\s+(in\s+)?(?P<city>.*)\?\s*"
+
+def kelvin_to_celcius(kelvin):
+    return kelvin - 273.15
 
 def parse_bot_commands(slack_events):
     """
@@ -61,7 +68,24 @@ def handle_command(command, channel):
     response = None
     # This is where you start to implement more commands!
     if command.strip().endswith('?'):
-        response = command
+        m = re.match(WEATHER_REGEX, command)
+        print(m)
+        if m:
+            city = m.group('city')
+            url = f"{WEATHER_API_URL}weather?q={city}&APPID={WEATHER_API_KEY}"
+            res = requests.get(url)
+            jsonRes = res.json()
+            resCode = int(jsonRes['cod'])
+
+            if resCode >= 200 and resCode <= 299:
+                description = jsonRes['weather'][0]['description']
+                temperature = kelvin_to_celcius(jsonRes['main']['temp'])
+                response = f'Expect {description} in {city} with a temperature of {temperature}°C.'
+            else:
+                response = f'I HAVE FAILED YOU ;_; (Response Code: {resCode})'
+        else: 
+            response = command
+        
 
     # Sends the response back to the channel
     slack_client.api_call(
