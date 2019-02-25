@@ -2,16 +2,16 @@ matrix:
   include:
     - language: generic
     before_install:
-    - openssl aes-256-cbc -K $encrypted_3ece005cb05e_key -iv $encrypted_3ece005cb05e_iv
+      - openssl aes-256-cbc -K $encrypted_3ece005cb05e_key -iv $encrypted_3ece005cb05e_iv
       -in deploy_rsa.enc -out deploy_rsa -d
     addons:
       ssh_known_hosts: moon.scs.ryerson.ca
     before_deploy:
-    - openssl aes-256-cbc -K $encrypted_3ece005cb05e_key -iv $encrypted_3ece005cb05e_iv
+      - openssl aes-256-cbc -K $encrypted_3ece005cb05e_key -iv $encrypted_3ece005cb05e_iv
       -in deploy_rsa.enc -out /tmp/deploy_rsa -d
-    - eval "$(ssh-agent -s)"
-    - chmod 600 /tmp/deploy_rsa
-    - ssh-add /tmp/deploy_rsa
+      - eval "$(ssh-agent -s)"
+      - chmod 600 /tmp/deploy_rsa
+      - ssh-add /tmp/deploy_rsa
     deploy:
       provider: script
       skip_cleanup: true
@@ -29,4 +29,4 @@ matrix:
     script: python cps-a2-test.py
 
     after_success:
-    - bash < (curl -s https://codecov.io/bash)
+      - bash < (curl -s https://codecov.io/bash)
