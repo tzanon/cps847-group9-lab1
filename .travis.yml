@@ -1,5 +1,18 @@
 matrix:
   include:
+  -
+    language: python
+    python:
+    - '2.7'
+    - '3.3'
+    - '3.4'
+    cache: pip
+    install:
+      - pip install pytest-cov
+    script:
+      - py.test --cov-report=xml term --cov=a2
+    after_success:
+    - bash <(curl -s https://codecov.io/bash)
   - 
     language: generic
     before_install:
@@ -17,13 +30,3 @@ matrix:
       script: rsync -r --delete-after --quiet ${TRAVIS_BUILD_DIR}/index.html ${DEPLOY_USER}@${DEPLOY_SERVER}:/home/avm/courses/cps847/sdeljooy
       on:
         branch: master
-  -
-    language: python
-    python:
-    - '2.7'
-    - '3.3'
-    - '3.4'
-    cache: pip
-    script: python -m unittest a2_test
-    after_success:
-    - bash <(curl -s https://codecov.io/bash)
