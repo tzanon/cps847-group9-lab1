@@ -24,6 +24,6 @@ matrix:
     - '3.3'
     - '3.4'
     cache: pip
-    script: python cps-a2-test.py
+    script: python -m unittest a2_test
     after_success:
     - bash < (curl -s https://codecov.io/bash)
