@@ -10,7 +10,7 @@ matrix:
     install:
       - pip install pytest-cov
     script:
-      - py.test --cov-report=xml term --cov=a2
+      - py.test --cov-report=xml --cov=a2
     after_success:
     - bash <(curl -s https://codecov.io/bash)
   - 
