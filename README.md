@@ -9,7 +9,7 @@ URL: http://141.117.233.115:4200
 
 Code: (repo-path/django/djangoProject) https://github.com/tzanon/cps847-group9-lab1/tree/master/django/djangoProject
 
-URL: http://141.117.233.115:8000/admin
+URL: http://141.117.233.115:8000
 
 **SQL:**
 
